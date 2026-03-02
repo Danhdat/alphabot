@@ -147,7 +147,6 @@ func (s *Scheduler2) Start() {
 	}
 	timer := time.NewTimer(time.Until(nextHour()))
 	defer timer.Stop()
-	go s.Run()
 	for {
 		select {
 		case <-timer.C:
