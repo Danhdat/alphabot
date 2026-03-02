@@ -123,6 +123,7 @@ func (s *Scheduler1) Start() {
 	}
 	ticker := time.NewTimer(time.Until(nextSchedule()))
 	defer ticker.Stop()
+	go s.Run()
 	go func() {
 		for {
 			select {

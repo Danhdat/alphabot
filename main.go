@@ -55,9 +55,9 @@ func main() {
 	scheduler := services.NewScheduler1(fetchService)
 	scheduler.Start()
 
-	/*autoVolumeService := services.NewAutoVolumeService()
+	autoVolumeService := services.NewAutoVolumeService()
 	scheduler2 := services.NewScheduler2(autoVolumeService)
-	scheduler2.Start()*/
+	scheduler2.Start()
 
 	analyzeService := services.NewAnalyzeService(botService)
 	scheduler3 := services.NewScheduler3(analyzeService, botService.GetChannelID())
@@ -68,7 +68,7 @@ func main() {
 	<-stopChan
 	utils.Logger.Info().Msg("Shutting down server...")
 	scheduler.Stop()
-	/*scheduler2.Stop()*/
+	scheduler2.Stop()
 	scheduler3.Stop()
 	time.Sleep(2 * time.Second)
 	utils.Logger.Info().Msg("Server stopped")
