@@ -53,15 +53,15 @@ func main() {
 	// 5️⃣ Start scheduler
 	fetchService := services.NewFetcherService()
 	scheduler := services.NewScheduler1(fetchService)
-	scheduler.Start()
+	go scheduler.Start()
 
 	autoVolumeService := services.NewAutoVolumeService()
 	scheduler2 := services.NewScheduler2(autoVolumeService)
-	scheduler2.Start()
+	go scheduler2.Start()
 
 	analyzeService := services.NewAnalyzeService(botService)
 	scheduler3 := services.NewScheduler3(analyzeService, botService.GetChannelID())
-	scheduler3.Start()
+	go scheduler3.Start()
 
 	stopChan := make(chan os.Signal, 1)
 	signal.Notify(stopChan, syscall.SIGINT, syscall.SIGTERM)
