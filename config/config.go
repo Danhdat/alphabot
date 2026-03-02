@@ -1,7 +1,6 @@
 package config
 
 import (
-	"alphabot/utils"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -22,11 +21,8 @@ type Config struct {
 var AppConfig *Config
 
 func LoadConfig() {
-	err := godotenv.Load()
-	if err != nil {
-		utils.Logger.Error().Msg("Error loading .env file")
-		os.Exit(1)
-	}
+	_ = godotenv.Load()
+
 	AppConfig = &Config{
 		TelegramBotToken:  os.Getenv("TELEGRAM_BOT_TOKEN"),
 		TelegramChatID:    os.Getenv("TELEGRAM_CHAT_ID"),
