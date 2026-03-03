@@ -150,6 +150,11 @@ func (s *AnalyzeService) AnalyzeAndNotifyVolumes(channelID string) error {
 			}
 			count, _ := s.notificationLogRepo.CountBySymbolToday(symbol)
 			countofWeek, _ := s.notificationLogRepo.CountBySymbolThisWeek(symbol)
+			infoSymbol, err := s.alphaRepo.GetBySymbol(symbol)
+			if err != nil {
+				utils.Logger.Error().Err(err).Msgf("failed to get symbol %s", symbol)
+				continue
+			}
 			message := fmt.Sprintf("💰 Symbol: %s\n"+
 				"📅 Time: %s\n"+
 				"🚀 Volume: %s (SMA21: %s)\n"+
@@ -160,7 +165,9 @@ func (s *AnalyzeService) AnalyzeAndNotifyVolumes(channelID string) error {
 				"✨ Pattern: %s\n"+
 				"📊 Confirmation: %s\n"+
 				"💎 Weekly Occurrences: %d\n"+
-				"%s\n",
+				"%s\n"+
+				"🎱 Marketcap: %s\n"+
+				"🎲 Contract Address: %s\n",
 				strings.TrimSuffix(latestRecord.Symbol, "USDT"),
 				formattedTime,
 				utils.FormatVolume(decimal.NewFromFloat(latestRecord.QuoteAssetVolume)),
@@ -173,6 +180,8 @@ func (s *AnalyzeService) AnalyzeAndNotifyVolumes(channelID string) error {
 				confirmationString,
 				countofWeek+1,
 				candlestickPattern.String(),
+				utils.FormatMarketCapFromString(infoSymbol.MarketCap),
+				infoSymbol.ContractAddress,
 			)
 			s.telegramBotService.SendTelegramToChannel(channelID, message)
 			notificationLog := &models.NotificationLog{

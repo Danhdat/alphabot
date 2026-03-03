@@ -112,3 +112,33 @@ func FormatElements(elements ...string) string {
 	}
 	return strings.Join(validElements, ", ")
 }
+
+func FormatMarketCapFromString(marketCapStr string) string {
+	value, err := strconv.ParseFloat(marketCapStr, 64)
+	if err != nil {
+		return "0"
+	}
+
+	if value == 0 {
+		return "0"
+	}
+
+	var unit string
+	var displayValue float64
+
+	switch {
+	case value >= 1e9:
+		unit = "B"
+		displayValue = value / 1e9
+	case value >= 1e6:
+		unit = "M"
+		displayValue = value / 1e6
+	case value >= 1e3:
+		unit = "K"
+		displayValue = value / 1e3
+	default:
+		return fmt.Sprintf("%.2f", value)
+	}
+
+	return fmt.Sprintf("%.2f%s", displayValue, unit)
+}

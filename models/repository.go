@@ -58,6 +58,15 @@ func (r *AlphaSymbolRepository) GetAllAlphaName() ([]string, error) {
 	return result, nil
 }
 
+func (r *AlphaSymbolRepository) GetBySymbol(symbol string) (*AlphaSymbol, error) {
+	var alpha AlphaSymbol
+	err := r.db.Where("symbol = ?", symbol).First(&alpha).Error
+	if err != nil {
+		return nil, err
+	}
+	return &alpha, nil
+}
+
 func (r *AlphaSymbolRepository) GetNameByAlphaSymbol(symbol string) (string, error) {
 	var alphaSymbol AlphaSymbol
 	err := r.db.Where("alpha_id = ?", symbol).First(&alphaSymbol).Error
