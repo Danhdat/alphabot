@@ -121,21 +121,21 @@ func (s *Scheduler1) Start() {
 		}
 		return next
 	}
-	ticker := time.NewTimer(time.Until(nextSchedule()))
-	defer ticker.Stop()
+	timer := time.NewTimer(time.Until(nextSchedule()))
+	defer timer.Stop()
+
 	go s.Run()
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				s.Run()
-				ticker.Reset(time.Until(nextSchedule()))
-			case <-s.stopChan:
-				utils.Logger.Info().Msg("scheduler stopped")
-				return
-			}
+
+	for {
+		select {
+		case <-timer.C:
+			s.Run()
+			timer.Reset(time.Until(nextSchedule()))
+		case <-s.stopChan:
+			utils.Logger.Info().Msg("scheduler stopped")
+			return
 		}
-	}()
+	}
 }
 
 func (s *Scheduler1) Stop() {
